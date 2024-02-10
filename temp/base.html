@@ -1,0 +1,268 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style>
+            .popup {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                padding: 20px;
+                background-color: #fff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                /* Add Bootstrap styling */
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                max-width: 400px;
+                width: 100%;
+            }
+            #backToTopBtn {
+                display: none; /* Hide the button by default */
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                
+                border: none;
+                padding: 10px 20px;
+                cursor: pointer;
+                border-radius: 5px;
+                }
+            .setteler {
+              display: flex;            
+              display: inline-block; 
+            }
+
+            .input-field, .btnf {
+                height: 60px;
+                vertical-align: middle;
+                padding: 0;
+                margin: 0; 
+            }
+            .password-toggle {
+                position: relative;
+            }
+
+            .password-toggle input[type="password"] {
+                padding-right: 30px;
+            }
+
+            .password-toggle .toggle-password {
+                position: absolute;
+                right: 5px;
+                top: 73%;
+                transform: translateY(-50%);
+                cursor: pointer;
+                width: 30px; 
+                height: 30px; 
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+        </style>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Shahrzad | شهرزاد</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+        <link href="{% static 'css/book_styles.css' %}" rel="stylesheet" />
+    </head>
+    <body>
+
+        <a type="button" id="backToTopBtn" onclick="scrollToTop()"><img src="{% static 'assets/up.svg' %}" alt="" width="30px"></a>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container px-4 px-lg-5">
+                <a class="navbar-brand" href="{% url 'home' %}">شهرزاد</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                        <li class="nav-item"><a type="button" class="nav-link active" aria-current="page" href="{% url 'home' %}"><img src="{% static 'assets/home.svg' %}" width="30px">خانه</a></li>
+                        <li class="nav-item"><a type="button" class="nav-link"><img src="{% static 'assets/info.svg' %}" width="30px">درباره ما</a></li>
+                        <li class="nav-item"><a type="button" class="nav-link" href="{% url 'cats' %}"><img src="{% static 'assets/category.svg' %}" width="30px">دسته بندی کتاب ها</a></li>
+                        
+                        {% if user.is_authenticated  %}
+
+                        <li class="nav-item"><a type="button" class="nav-link" onclick="openPopup('userpanelPopup')"><img src="{% static 'assets/user.svg' %}" width="30px"> {{user.username}} </a></li>
+
+                        <div id="userpanelPopup" class="popup">
+                            <div dir="rtl" style="position: static; ">
+                                <a type="button" type="button" onclick="closePopup('userpanelPopup')" dir="ltr"><img src="{% static 'assets/close.svg' %}" width="30px"></a>
+                            </div>
+                            <form id="loginForm">
+                                
+                                <div class="form-group">
+                                    <a type="button" class="btn btn" onclick="openPopup('changepassPopup')"><img src="{% static 'assets/changepass.svg' %}" width="30px"> تغییر رمز عبور</a>
+                                </div><br>
+
+                                <div class="form-group">
+                                    <button type="button" class="btn btn" onclick="signout()"><img src="{% static 'assets/signout.svg' %}" width="30px" onclick="signout()"> خروج از حساب کاربری</button>
+                                </div><br>
+
+                                <div class="form-group">
+                                    <a type="button" class="btn btn" href="{% url 'prlist' %}"><img src="{% static 'assets/prboks.svg' %}" width="30px"> کتاب های خریداری شده</a>
+                                </div><br>
+
+                            </form>
+                        </div>
+
+                        <div id="changepassPopup" class="popup">
+                            <div dir="rtl" style="position: static; ">
+                                <a type="button" type="button" onclick="closePopup('changepassPopup')" dir="ltr"><img src="{% static 'assets/close.svg' %}" width="30px"></a>
+                            </div>
+                            <form id="changepassForm">
+                                
+                                <div class="form-group password-toggle">
+                                    <label for="oldpassword" style="padding-bottom: 10px;"> رمز عبور کنونی</label>
+                                    <input type="password" class="form-control" id="oldpassword" required>
+                                    <span class="toggle-password" onclick="togglePasswordVisibility('oldpassword')"><img src="/static/assets/show.svg" width="30px"></span>
+                                </div><br>
+
+                                <div class="form-group password-toggle">
+                                    <label for="newpassword1" style="padding-bottom: 10px;">رمز عبور جدید</label>
+                                    <input type="password" class="form-control" id="newpassword1" required>
+                                    <span class="toggle-password" onclick="togglePasswordVisibility('newpassword1')"><img src="/static/assets/show.svg" width="30px"></span>
+
+                                </div><br>
+
+                                <div class="form-group password-toggle">
+                                    <label for="newpassword2" style="padding-bottom: 10px;">تکرار رمز عبور جدید</label>
+                                    <input type="password" class="form-control" id="newpassword2" required>
+                                    <span class="toggle-password" onclick="togglePasswordVisibility('newpassword2')"><img src="/static/assets/show.svg" width="30px"></span>
+
+                                </div><br>
+
+                                <a type="button" class="btn btn-success" onclick="changepass()"><img src="{% static 'assets/chngpss.svg' %}" width="30px"> تغییر رمز</a>
+                                
+                            </form>
+                        </div>
+
+                        {% else %}
+
+                        <li class="nav-item"><a type="button" class="nav-link" onclick="openPopup('signupPopup')"><img src="{% static 'assets/user.svg' %}" width="30px"> ورود / ثبت نام</a></li>
+
+                        <div id="loginPopup" class="popup">
+                            <div dir="rtl" style="position: static; ">
+                                <a type="button" type="button" onclick="closePopup('loginPopup')" dir="ltr"><img src="{% static 'assets/close.svg' %}" width="30px"></a>
+                            </div>
+                            <form id="loginForm">
+                                
+                                <div class="form-group">
+                                    <label for="loginPhoneNumber" style="padding-bottom: 10px;">شماره موبایل</label>
+                                    <input type="text" class="form-control" id="loginPhoneNumber" required maxlength="11">
+                                </div><br>
+                                <div class="form-group password-toggle">
+                                    <label for="loginPassword" style="padding-bottom: 10px;">رمز عبور</label>
+                                    <input type="password" class="form-control" id="loginPassword" required>
+                                    <span class="toggle-password" onclick="togglePasswordVisibility('loginPassword')"><img src="/static/assets/show.svg" width="30px"></span>
+
+                                </div><br>
+                                <a type="button" class="btn btn-success" onclick="login()"><img src="{% static 'assets/login.svg' %}" width="30px"> ورود </a>
+                                <a type="button" class="btn btn-primary" onclick="openPopup('signupPopup')"><img src="{% static 'assets/reg.svg' %}" width="30px"> ثبت نام</a>
+                            </form>
+                        </div>
+                
+                        <div id="signupPopup" class="popup">
+                            <div dir="rtl" style="position: static; ">
+                                <a type="button" type="button" onclick="closePopup('signupPopup')" dir="ltr"><img src="{% static 'assets/close.svg' %}" width="30px"></a>
+                            </div>
+                            <form id="signupForm" >
+                                
+                                <div class="form-group">
+                                    <label for="signupUsername" style="padding-bottom: 10px;"> شماره موبایل </label>
+                                    <input type="text" class="form-control" id="signupPhoneNumber" required maxlength="11">
+                                </div><br>
+                                <div class="form-group">
+                                    <label for="signupPhoneNumber" style="padding-bottom: 10px;"> نام کاربری </label>
+                                    <input type="text" class="form-control" id="signupUsername" required>
+                                </div><br>
+                                <div class="form-group password-toggle">
+                                    <label for="signupPassword" style="padding-bottom: 10px;">رمز عبور</label>
+                                    <input type="password" class="form-control" id="signupPassword1" required>
+                                    <span class="toggle-password" onclick="togglePasswordVisibility('signupPassword1')"><img src="/static/assets/show.svg" width="30px"></span>
+
+                                </div><br>
+                                <div class="form-group password-toggle">
+                                    <label for="signupPassword" style="padding-bottom: 10px;">تکرار رمز عبور</label>
+                                    <input type="password" class="form-control" id="signupPassword2" required>
+                                    <span class="toggle-password" onclick="togglePasswordVisibility('signupPassword2')"><img src="/static/assets/show.svg" width="30px"></span>
+
+                                </div><br>
+                                <div id="alertContainer"></div>
+                                <a type="button" class="btn btn-success" onclick="signup()"><img src="{% static 'assets/reg.svg' %}" width="30px">ثبت نام</a>
+                                <a type="button" class="btn btn-primary" onclick="openPopup('loginPopup')"><img src="{% static 'assets/login.svg' %}" width="30px">ورود به حساب کاربری</a>
+                            </form>
+                        </div>
+                        {% endif %}                            
+                        
+                    </ul>
+                    <form class="d-flex">
+                        <a href="{% url 'cart-view' %}" class="btn btn-outline-dark" type="button">
+                            <img src="{% static 'assets/cart.svg' %}" width="30px">
+                            سبد خرید
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </nav>
+
+        
+        
+        {% block content %}
+            
+        {% endblock content %}
+            
+        <div class="container-fluid" style="padding-top: 75px; padding-bottom: 50px;">
+            <div class="row">
+              <!-- Contact Info Column (Left) -->
+              <div class="col-md-4">
+                <!-- Add your contact info content here -->
+                <h2>راه های ارتباطی</h2>
+                <br>
+                <p><img src="{% static 'assets/mail.svg' %}" width="30px">  info @ shahrzadbook.com</p>
+                <p><img src="{% static 'assets/phone.svg' %}" width="30px">  +98 904 44 64 325</p>
+                <p><img src="{% static 'assets/loc.svg' %}" width="30px">  تهران</p>
+              </div>
+          
+              <!-- Page Links Column (Middle) -->
+              <div class="col-md-4">
+                <!-- Add your page links content here -->
+                <h2>محتوای سایت</h2><br>
+                <ul style="list-style: none;">
+                  <li><a href="{% url 'home' %}" style="text-decoration: none; color: inherit;">خانه</a></li><br>
+                  <li><a href="{% url 'cats' %}" style="text-decoration: none; color: inherit;">دسته بندی کتاب ها</a></li><br>
+                  <li><a href="#" style="text-decoration: none; color: inherit;">درباره ما</a></li>
+                  <!-- Add more links as needed -->
+                </ul>
+              </div>
+          
+              <!-- New Settlers Column (Right) -->
+              <div class="col-md-4">
+                <!-- Add your new settlers content here -->
+                <h2>اطلاع از آخرین اخبار</h2><br>
+                <form>
+                    <div class="setteler" style="display: flex;">
+                    
+                        <input type="email" class="form-control input-field" id="email" placeholder="ایمیل خود را وارد کنید" >
+                        <button type="submit" class="btn btn-outline-dark mb-2 btnf"><img src="{% static 'assets/sett.svg' %}" width="30px"> عضویت</button>
+                    
+                    </div>
+                </form>
+              </div>
+            </div>
+        </div>
+
+        <footer class="py-5 bg-dark">
+            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; Shahrzad 2023</p></div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{% static 'js/base.js' %}"></script>
+        
+    </body>
+</html>

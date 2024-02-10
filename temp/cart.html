@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+<style>
+.setteler {
+  display: inline-block; 
+}
+
+.input-field, .btnf {
+  height: 60px;
+  vertical-align: middle;
+  padding: 0;
+  margin: 0; 
+}
+
+</style>
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <h1 dir="rtl" > سبد خرید</h1>
+        <div id="bookview" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" style="padding-top: 60px;">
+       
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container px-4 px-lg-5 mt-5">
+        <h2 class="fw-bolder mb-4" dir="rtl" style="padding-bottom: 20px;">فاکتور خرید</h2>
+        <div>
+
+            <div id="total" dir="rtl" style="padding-bottom: 20px;"> </div>
+            <div id="offer" dir="rtl" style="padding-bottom: 20px;"> </div>
+            <div id="payable" dir="rtl" style="padding-bottom: 20px;"> </div>
+            <form>
+                <div class="setteler" style="display: flex;">
+                
+                    <input type="text" class="form-control input-field" id="token" placeholder="کد تخفیف خود را وارد کنید" >
+                    <button type="button" class="btn btn-outline-dark mb-2 btnf" onclick="Offer()"><img src="{% static 'assets/off.svg' %}" width="30px"> اعمال</button>
+                    <button type="button" class="btn btn-outline-dark mb-2 btnf" onclick="deleteOffer()"><img src="{% static 'assets/deloff.svg' %}" width="30px"> حذف تخفیف</button>
+
+                </div>
+            </form>
+            <button type="button" class="btn btn-outline-dark mb-2 btnf" onclick="pay()"> <img src="{% static 'assets/pay.svg' %}" width="30px"> <span style="padding-right: 5px;">پرداخت</span> </button>
+
+        </div>
+    </div>
+</section>
+<script src="{% static 'js/cart.js' %}"></script>
+{% endblock content %}
+    

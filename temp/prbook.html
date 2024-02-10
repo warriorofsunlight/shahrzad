@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+        
+        {% block content %}
+        <style>
+            .popup {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                padding: 20px;
+                background-color: #fff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                max-width: 400px;
+                width: 100%;
+            }
+            .player-container {
+            max-width: 400px;
+            margin: auto;
+            margin-top: 50px;
+            }
+            .player-container h2 {
+                margin-bottom: 20px;
+            }
+        </style>
+        <section class="py-5">
+            <div id="bookdetail" class="container px-4 px-lg-5 my-5">
+
+                <div id="playerPopup" class="popup">
+                    <div dir="rtl" style="position: static; ">
+                        <a type="button" type="button" onclick="closePopup('playerPopup')" dir="ltr"><img src="{% static 'assets/close.svg' %}" width="30px"></a>
+                    </div>
+                    
+                    <div class="container player-container">
+                        <div class="text-center">
+                            <audio id="audioPlayer" controls class="mb-3">
+                                <!-- <source src=""  type="audio/mpeg"> -->
+                                Your browser does not support the audio element.
+                            </audio>
+                            <button id="speedButton2" class="btn btn-secondary">x2</button>
+                            <button id="speedButton15" class="btn btn-secondary">x1.5</button>
+                            <button id="speedButton1" class="btn btn-secondary">x1</button>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="summaryPopup" class="popup">
+                    <div dir="rtl" style="position: static; ">
+                        <a type="button" type="button" onclick="closePopup('summaryPopup')" dir="ltr"><img src="{% static 'assets/close.svg' %}" width="30px"></a>
+                    </div>
+                    
+                   
+
+                </div>
+
+            </div>
+        </section>
+
+        <script src="{% static 'js/prbook.js' %}"></script>
+        {% endblock content %}
+            
